@@ -1,4 +1,3 @@
-import { Config } from "./../config";
 import * as https from "https";
 export enum Scope {
     IDENTITY = 1,
