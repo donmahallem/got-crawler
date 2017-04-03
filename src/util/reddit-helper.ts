@@ -1,13 +1,4 @@
 import { Config } from "./../config";
-import { Auth } from "./auth";
-import {
-    RedditUser,
-    ExchangeTokenResponse,
-    RedditThing,
-    RedditSelftext,
-    RedditSubmission,
-    RedditSubmissionListing
-} from "./../models/reddit";
 import * as https from "https";
 export enum Scope {
     IDENTITY = 1,
@@ -33,77 +24,37 @@ export enum Scope {
 
 type Scopes = Scope[];
 
+export interface RedditThing {
+    id: string;
+}
+
+export interface RedditSelftext extends RedditThing {
+    selftext: string;
+    selftext_html: string;
+}
+
+export interface RedditSubmission extends RedditThing {
+
+}
 export enum Duration {
     PERMANENT = 1,
     TEMPORARY = 2
 }
+export type RedditResponse<T> = {
+    type: string;
+    data: T;
+}
+
+export interface RedditListing<T extends RedditThing> {
+    before?: string | null;
+    after?: string | null;
+    children: T[];
+}
+
+export interface RedditSubmissionListing extends RedditListing<RedditSubmission> {
+
+}
 export class RedditHelper {
-    //https://www.reddit.com/api/v1/authorize?client_id=CLIENT_ID&response_type=TYPE&state=RANDOM_STRING&redirect_uri=URI&duration=DURATION&scope=SCOPE_STRING
-
-    public static scopesToString(scopes: Scopes): string {
-        return scopes.map((scope) => {
-            return Scope[scope].toLowerCase();
-        }).join(",");
-    }
-
-    public static exchangeCode(code: string): Promise<ExchangeTokenResponse> {
-        return new Promise((resolve, reject) => {
-            let options: https.RequestOptions = {
-                host: 'www.reddit.com',
-                port: 443,
-                path: '/api/v1/access_token',
-                method: 'POST',
-                headers: {
-                    Authorization: "Basic " + new Buffer(Config.redditClientId + ":" + Config.redditClientSecret).toString("base64")
-                }
-            };
-            let req = https.request(options, function (res) {
-                let body = "";
-                res.setEncoding('utf8');
-                res.on('data', function (chunk) {
-                    body += chunk;
-                });
-                res.on("error", function (error) {
-                    reject(error);
-                });
-                res.on("end", function () {
-                    resolve(JSON.parse(body));
-                });
-            });
-            req.write("grant_type=authorization_code&code=" + code + "&redirect_uri=" + Config.redditRedirectUri);
-            req.end();
-        });
-    }
-
-    public static getMe(token: string): Promise<RedditUser> {
-        return new Promise((resolve, reject) => {
-            let options: https.RequestOptions = {
-                host: 'oauth.reddit.com',
-                port: 443,
-                path: '/api/v1/me',
-                method: 'GET',
-                headers: {
-                    "User-Agent": "GoTrade Live Feed",
-                    Authorization: "Bearer " + token
-                }
-            };
-            let req = https.request(options, function (res) {
-                let body = "";
-                res.setEncoding('utf8');
-                res.on('data', function (chunk) {
-                    body += chunk;
-                });
-                res.on("error", function (error) {
-                    reject(error);
-                });
-                res.on("end", function () {
-                    resolve(JSON.parse(body));
-                });
-            });
-            req.end();
-        });
-    }
-
     public static getNewSubmissions(subreddit: string, limit: number = 10): Promise<RedditSubmissionListing> {
         return new Promise((resolve, reject) => {
             let options: https.RequestOptions = {
@@ -132,15 +83,5 @@ export class RedditHelper {
                 reject(e);
             });
         });
-    }
-
-
-    public static createAuthorizeUrl(scopes: Scopes, state: string, duration: Duration = Duration.PERMANENT): string {
-        return "https://www.reddit.com/api/v1/authorize?client_id=" + Config.redditClientId
-            + "&response_type=code"
-            + "&state=" + state
-            + "&redirect_uri=" + Config.redditRedirectUri
-            + "&duration=" + (duration == Duration.PERMANENT ? "permanent" : "temporary")
-            + "&scope=" + RedditHelper.scopesToString(scopes);
     }
 }
