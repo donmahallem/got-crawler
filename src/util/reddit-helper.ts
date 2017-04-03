@@ -61,7 +61,7 @@ export class RedditHelper {
                 port: 443,
                 path: "/r/" + subreddit + "/new?limit=" + limit,
                 headers: {
-                    "User-Agent": "github.com/DonMahallem/got-api"
+                    "User-Agent": "github.com/DonMahallem/got-crawler"
                 }
             };
             let request = https.get(options, (res) => {
