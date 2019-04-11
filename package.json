@@ -18,7 +18,7 @@
     "license": "ISC",
     "dependencies": {
         "@types/nconf": "0.0.34",
-        "@types/redis": "^0.12.36",
+        "@types/redis": "^2.8.12",
         "nconf": "^0.8.4",
         "redis": "^2.7.1"
     },
