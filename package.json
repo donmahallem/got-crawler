@@ -33,7 +33,7 @@
         "karma-sinon": "1.0.5",
         "mocha": "8.2.1",
         "nodemon": "2.0.7",
-        "nyc": "14.1.1",
+        "nyc": "15.1.0",
         "ts-node": "9.1.1",
         "typedoc": "0.20.19",
         "typescript": "3.9.5"
