@@ -24,7 +24,7 @@
     },
     "devDependencies": {
         "@types/chai": "4.2.15",
-        "@types/mocha": "8.2.1",
+        "@types/mocha": "8.2.2",
         "chai": "4.3.4",
         "istanbul": "0.4.5",
         "karma": "6.2.0",
