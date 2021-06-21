@@ -19,7 +19,7 @@
     "dependencies": {
         "@types/nconf": "0.10.0",
         "@types/redis": "^2.8.29",
-        "nconf": "^0.11.2",
+        "nconf": "^0.11.3",
         "redis": "^3.1.2"
     },
     "devDependencies": {
